@@ -15,27 +15,27 @@ class BatchStoryboardSaver:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE",),                    # 输入图片批次
-                "scene_number": ("INT", {               # 场次号
+                "images": ("IMAGE",),                    
+                "scene_number": ("INT", {               
                     "default": 1, 
                     "min": 1, 
                     "max": 999
                 }),
-                "shot_number": ("INT", {                # 镜头号
+                "shot_number": ("INT", {                
                     "default": 1, 
                     "min": 1, 
                     "max": 999
                 }),
-                "prompt_text": ("STRING", {              # 该镜头的提示词
+                "prompt_text": ("STRING", {              
                     "default": "", 
                     "multiline": True
                 }),
-                "output_folder": ("STRING", {           # 输出目录名
+                "output_folder": ("STRING", {          
                     "default": "storyboards"
                 }),
             },
             "optional": {
-                "project_name": ("STRING", {            # 项目名称前缀
+                "project_name": ("STRING", {           
                     "default": "AI_Movie"
                 }),
             }
@@ -47,7 +47,7 @@ class BatchStoryboardSaver:
     CATEGORY = "AI电影/分镜工具"
 
     def save_batch(self, images, scene_number, shot_number, prompt_text, output_folder, project_name="AI_Movie"):
-        # 获取ComfyUI标准输出路径
+        
         base_output = os.path.join(os.getcwd(), "output", output_folder)
         os.makedirs(base_output, exist_ok=True)
         
@@ -56,12 +56,11 @@ class BatchStoryboardSaver:
         saved_files = []
         
         for idx, image in enumerate(images):
-            # 文件名构造
+      
             filename = f"{project_name}_Scene{scene_number:02d}_Shot{shot_number:02d}_{idx:03d}_{timestamp}.png"
             filepath = os.path.join(base_output, filename)
             
-            # 保存图片（ComfyUI的IMAGE是tensor，需要转换）
-            # 这里使用ComfyUI内置的save方法逻辑
+      
             from comfy.utils import common_upscale
             import numpy as np
             from PIL import Image
@@ -71,7 +70,7 @@ class BatchStoryboardSaver:
             img_pil = Image.fromarray(img_np)
             img_pil.save(filepath, "PNG")
             
-            # 同步保存提示词txt
+        
             txt_name = filename.replace(".png", ".txt")
             txt_path = os.path.join(base_output, txt_name)
             metadata = {
